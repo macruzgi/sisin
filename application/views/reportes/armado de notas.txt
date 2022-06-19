@@ -1,0 +1,85 @@
+ <table class="table table-bordered" width ="100%" border="1">
+										  <thead>
+										  <tr>
+										   <th>C&oacute;digo</th>
+										   <th>Nombre</th>
+											<?php 
+											/*
+												NOTA:
+												siguiente es para armar los encabezados de los periodos de la tabla
+												dinamicamete, dependiendo de los periodos encontrados asi se generara
+												las columnas dimamicante.
+												Meto el resultado ($alumnosEncontrados->PERIODO) traido de controlador en un array solo el perido
+												para luego quitar los valores repetidos y solo tome los indeces unicos y quite los repetidos con la funcion
+												array_unique, luego itero ese arrary para amar las columnas de las notas
+												esto se hace porque la liberia de PDF dara error si las celdas de las tablas no estan completas
+											*/
+											$datosEnarray = array();
+											foreach($TraerNotas as $alumnosEncontrados)
+											{
+												$datosEnarray[]=$alumnosEncontrados->PERIODO;
+												
+											}
+											$resultadoPeriodos = array_unique($datosEnarray);
+											//print_r($resultado);
+											foreach($resultadoPeriodos as $preidos):
+												
+											?>
+												<th><?php echo $preidos;?></th>
+												
+											<?php endforeach;?>
+											  <th>Promedio</th>
+											</tr>
+											
+											
+										  </thead>
+										  <tbody>
+											<?php 
+												
+												/*
+													NOTA:
+													el primer foreach recorre todos los resultado encontrado para iterar el resultado de los alumnos
+													se crea la variable $banderaAlumno para utilizarla como bandera y no imprimir los registros repetidos;
+													luego despues de iterar los alumnos, el segundo foreach se vulve a iterar todo el resultado encontrado igual que el primer foreach pero solo se iteran las notas y armar las columnas dinamicamente para cada nota ya que las notas estan en filas no en columnas, en el segundo foreac de iteracion de notas imprimira solo las notas que correspondan al alumno iterado del primer foreach;
+													dentro del segundo foreach al iterar las notas al final calcula el promedio dividiendolo por le numero de
+													 vueltas por cada nota del alumno
+													*/
+											$banderaAlumno = "";
+	
+											foreach($TraerNotas as $alumnosEncontrados):
+												
+											?>
+											<tr>
+												<?php if($banderaAlumno != $alumnosEncontrados->alumno_codigo)
+												{
+													$banderaAlumno = $alumnosEncontrados->alumno_codigo;
+												?>
+												 <td><?php echo $alumnosEncontrados->alumno_codigo;?> </td>
+												 <td><?php echo $alumnosEncontrados->NOMBRE;?> </td>
+												 <?php 
+												 $promedio = 0;
+												 $vueltas = 0;
+												foreach($TraerNotas as $notasEncontradas):
+												if($alumnosEncontrados->alumno_codigo == $notasEncontradas->alumno_codigo)
+												{
+													$vueltas += 1;
+													$promedio = $promedio + $notasEncontradas->N_1;
+												?>
+												<td><?php echo $notasEncontradas->N_1;?></td>
+												
+												<?php 
+												} 
+												endforeach;
+												
+												?>
+												
+												<td><?php echo number_format($promedio/$vueltas, 2);?></td>
+												<?php
+												} 
+												?>
+												
+											</tr>
+											
+											<?php endforeach;?>
+										  </tbody>
+										</table>

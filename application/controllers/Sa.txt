@@ -1,0 +1,84 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/*
+Controlador estandarizado, creado por MaCruz-Gi, correo: giancarlos1029@hotmail.com
+*/
+class Sisin extends CI_Controller {
+
+	/**
+	 * Index Page for this controller.
+	 *
+	 * Maps to the following URL
+	 * 		http://example.com/index.php/welcome
+	 *	- or -
+	 * 		http://example.com/index.php/welcome/index
+	 *	- or -
+	 * Since this controller is set as the default controller in
+	 * config/routes.php, it's displayed at http://example.com/
+	 *
+	 * So any other public methods not prefixed with an underscore will
+	 * map to /index.php/welcome/<method_name>
+	 * @see https://codeigniter.com/user_guide/general/urls.html
+	 */
+	public function index()
+	{
+		//esto para los permisos individuales por usuario, cuando en la tabla adm_usuario no existe el id_rol
+		// se ha cambiado por roles
+		/*
+		$mostrar["contenido"]	="vista_index";
+		$mostrar["TraerPermisosUsuario"] = $this->Validarpermisos->TraerPermisosUsuario(1);
+		$this->load->view("plantilla", $mostrar);
+		*/
+		
+		//$mostrar["contenido"]	="vista_index";
+		//$mostrar["TraerPermisosUsuario"] = $this->Validarpermisos->TraerPermisosUsuario(23);
+		$this->load->view("vista_index");
+		
+	}
+	public function IniciarSesion()
+	{
+		
+		$this->form_validation->set_rules('usuario', 'Usuario', 'required');
+		$this->form_validation->set_rules('clave', 'Clave', 'required');
+		
+		if ($this->form_validation->run() == FALSE)
+		{
+			//$this->load->view('vista_index');
+			echo validation_errors();
+		}
+		else
+		{
+			$adm_usuario = array(
+				"usuario"=>$this->input->post('usuario'),
+				"clave"=>md5($this->input->post('clave'))
+				);
+			///valido el usuario
+			$usuarioEncontrado  = $this->Usuariosbuscar->IniciarSesion($adm_usuario);
+			if($usuarioEncontrado->usuario == 'NO')
+			{
+				echo $usuarioEncontrado->id_usuario;//dato el id_usuario me trae el mensaje de error 
+			}
+			else
+			{
+          	
+				$datosEnSesion = array(
+				'id_usuario'=>$usuarioEncontrado->id_usuario,
+				'usuario'=>$usuarioEncontrado->usuario,
+				'id_rol'=>$usuarioEncontrado->id_rol,
+				'docente_nombre'=>$usuarioEncontrado->docente_nombre,
+				'docente_apellido'=>$usuarioEncontrado->docente_apellido,
+				'chequear'=>true
+				);
+				//agrego los datos a una sesion
+				$this->session->set_userdata($datosEnSesion); 
+				//redirect(base_url()."establecimientos/VistaInicio/"); 
+				//exit;
+				echo 1;
+      
+        
+			}	
+			
+		}
+	}
+}

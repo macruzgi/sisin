@@ -1,0 +1,19 @@
+
+
+				<table class="gridtable" border="0" width ="100%">
+							
+								<tr>
+									<td style ="width:262px;">
+									<img src="<?php echo base_url();?>images/logosv.gif" width ="30%">
+									</td>
+									<td style="text-align:center"><?php echo $TraerDatosGenerales->informacion_nombre_institucion;?>
+									<br>
+									<?php echo $TraerDatosGenerales->informacion_siglas;?>
+									<br>
+									DISTRITO: <?php echo $TraerDatosGenerales->informacion_distrito;?>
+									<br>
+									C&OACUTE;DIGO DE INFRAESTRUCTURA: <?php echo $TraerDatosGenerales->informacion_codigo_infraestructura;?></td>
+									<td style="text-align:right;width:262px;"><img src="<?php echo base_url();?>fotografias/<?php echo $TraerDatosGenerales->informacion_nombre_logo;?>" width ="15%"></td>
+								</tr>
+								
+							</table> 
